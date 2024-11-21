@@ -1,117 +1,110 @@
 'use strict';
 /*
-const modal = document.querySelector('.modal');
-const overlay = document.querySelector('.overlay');
-const btnCLoseModal = document.querySelector('.close-modal');
-const btnShowModal = document.querySelectorAll('.show-modal');
-console.log(btnShowModal);
-/*
-const closeModal = function () {
-  modal.classList.add('hidden');
-  overlay.classList.add('hidden');
-};
-const showModal = function () {
-  modal.classList.remove('hidden');
-  overlay.classList.remove('hidden');
-};
+console.log(document.querySelector('.message').textContent);
 
-for (let i = 0; i < btnShowModal.length; i++)
-  btnShowModal[i].addEventListener('click', showModal);
-btnCLoseModal.addEventListener('click', closeModal);
-//прибрати вікно клікнувши за межами його
-overlay.addEventListener('click', closeModal);
+document.querySelector('.message').textContent = '🎉 correect nummber';
+
+document.querySelector('.number').textContent = 10;
+document.querySelector('.score').textContent = 3;
+
+console.log(document.querySelector('.guess').value);
+document.querySelector('.guess').value = 23;
+
 */
-/* function () {
-    console.log('Button clicked');
-    modal.classList.remove('hidden');
-    overlay.classList.remove('hidden');
-  }); */
+
+//developing app step by step
+
+//document.querySelector('.check').addEventListener('click'); //actually usking our check box to react on click in it
+
+//using function to manipulate the value in check box
+//(document.querySelector('.guess').value)
 /*
-//const modal = document.querySelector('.modal');
-const overlay = document.querySelector('.overlay');
-const btnCLoseModal = document.querySelector('.close-modal');
-const btnShowModal = document.querySelectorAll('.show-modal');
+let score = 20;
+const secretNumber = Math.trunc(Math.random() * 20) + 1;
 
-//to open modal
-const showModal = modalId => {
-  const modal = document.getElementById(modalId);
-  modal.classList.add('hidden');
-  overlay.classList.add('hidden');
-};
+document.querySelector('.check').addEventListener('click', function () {
+  const guess = Number(document.querySelector('.guess').value);
+  console.log(guess, typeof guess);
 
-//to close model
-const closeModal = modalId => {
-  const modal = document.getElementById(modalId);
-  modal.classList.remove('hidden');
-  overlay.classList.remove('hidden');
-};
+  if (!guess) {
+    document.querySelector('.message').textContent = '❌ no number';
+  } else if (guess === secretNumber) {
+    document.querySelector('.message').textContent = 'Correct!';
+    document.querySelector('.number').textContent = secretNumber;
 
-//event listener to open button
-openButton.forEach(button => {
-  button.addEventListener('click', () => {
-    const target = button.getAttribute('data-target');
-    showModal(target);
-  });
-});
-
-//event listener for close buttons
-
-closeButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    const target = button.getAttribute('data-target');
-    closeModal(target);
-  });
-});
-
-//close when click on overlay
-
-overlay.addEventListener('click', () => {
-  document.querySelectorAll('.modal').forEach(modal => {
-    modal.classList.add('hidden');
-  });
-  overlay.classList.add('hidden');
+    document.querySelector('body').style.backgroundColor = '#60b347';
+    document.querySelector('.number').style.width = '30rem';
+  } else if (guess > secretNumber) {
+    if (score > 1) {
+      document.querySelector('.message').textContent = 'too high';
+      score--;
+      document.querySelector('body').style.backgroundColor = '#F60505';
+      document.querySelector('.score').textContent = 0;
+    } else {
+      document.querySelector('.message').textContent = 'you have lost';
+      document.querySelector('.score').textContent = 0;
+      document.querySelector('body').style.backgroundColor = '#F60505';
+    }
+  } else if (quess < secretNumber) {
+    document.querySelector('.message').textContent = 'too low';
+    score--;
+    document.querySelector('body').style.backgroundColor = '#F60505';
+    document.querySelector('.score').textContent = 0;
+  }
 });
 */
 
-// Select elements
-const showButtons = document.querySelectorAll('.show-modal');
-const closeButtons = document.querySelectorAll('.close-modal');
-const overlay = document.querySelector('.overlay');
+let secretNumber = Math.trunc(Math.random() * 20) + 1;
 
-// Function to open modal
-const showModal = modalId => {
-  const modal = document.getElementById(modalId);
-  modal.classList.remove('hidden');
-  overlay.classList.remove('hidden');
-};
+let score = 20;
 
-// Function to close modal
-const closeModal = modalId => {
-  const modal = document.getElementById(modalId);
-  modal.classList.add('hidden');
-  overlay.classList.add('hidden');
-};
+let highscore = 0;
 
-// Attach event listeners to showModalons
-showButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    const target = button.getAttribute('data-target');
-    showModal(target);
-  });
+//document.querySelector('.number').textContent = secretNumber;
+
+document.querySelector('.check').addEventListener('click', function () {
+  const guess = Number(document.querySelector('.guess').value);
+  console.log(guess);
+
+  if (!guess) {
+    document.querySelector('.message').textContent = '⛔️ enter a number';
+  } else if (guess === secretNumber) {
+    document.querySelector('.message').textContent = '🎉CORRECT';
+    document.querySelector('.number').textContent = secretNumber;
+    document.querySelector('body').style.backgroundColor = '#60b347';
+    document.querySelector('.number').style.width = '30rem';
+
+    if (score > highscore) {
+      highscore = score;
+      document.querySelector('.highscore').textContent = highscore;
+    }
+  } else if (guess > secretNumber) {
+    if (score > 1) {
+      document.querySelector('.message').textContent = '😏 too high';
+      score = score - 10;
+      document.querySelector('.score').textContent = score;
+    } else {
+      document.querySelector('.message').textContent = '💀 проїбав';
+      document.querySelector('body').style.backgroundColor = '#F60505';
+    }
+  } else if (guess < secretNumber) {
+    if (score > 1) {
+      document.querySelector('.message').textContent = '🙁 too low';
+      score = score - 10;
+      document.querySelector('.score').textContent = score;
+    } else {
+      document.querySelector('.message').textContent = '💀 проїбав';
+      document.querySelector('body').style.backgroundColor = '#F60505';
+    }
+  }
 });
 
-// Attach event listeners to close buttons
-closeButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    const target = button.getAttribute('data-target');
-    closeModal(target);
-  });
-});
-
-// Close modal when clicking on the overlay
-overlay.addEventListener('click', () => {
-  document.querySelectorAll('.modal').forEach(modal => {
-    modal.classList.add('hidden');
-  });
-  overlay.classList.add('hidden');
+document.querySelector('.again').addEventListener('click', function () {
+  score = 20;
+  secretNumber = Math.trunc(Math.random() * 20) + 1;
+  document.querySelector('.message').textContent = 'start guessing...';
+  document.querySelector('.guess').value = '';
+  document.querySelector('.score').textContent = score;
+  document.querySelector('.number').textContent = '?';
+  document.querySelector('body').style.backgroundColor = '#222';
 });
