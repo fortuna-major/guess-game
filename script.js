@@ -1,117 +1,102 @@
 'use strict';
-/*
-const modal = document.querySelector('.modal');
-const overlay = document.querySelector('.overlay');
-const btnCLoseModal = document.querySelector('.close-modal');
-const btnShowModal = document.querySelectorAll('.show-modal');
-console.log(btnShowModal);
-/*
-const closeModal = function () {
-  modal.classList.add('hidden');
-  overlay.classList.add('hidden');
-};
-const showModal = function () {
-  modal.classList.remove('hidden');
-  overlay.classList.remove('hidden');
-};
+//selecting elements
+const score0El = document.querySelector('#score--0');
+const score1El = document.getElementById('score--1');
+const player0El = document.querySelector('.player--0');
+const player1El = document.querySelector('.player--1');
+const current0El = document.getElementById('current--0');
+const current1El = document.getElementById('current--1');
+const diceEl = document.querySelector('.dice');
+const btnNew = document.querySelector('.btn--new');
+const btnRoll = document.querySelector('.btn--roll');
+const btnHold = document.querySelector('.btn--hold');
 
-for (let i = 0; i < btnShowModal.length; i++)
-  btnShowModal[i].addEventListener('click', showModal);
-btnCLoseModal.addEventListener('click', closeModal);
-//прибрати вікно клікнувши за межами його
-overlay.addEventListener('click', closeModal);
-*/
-/* function () {
-    console.log('Button clicked');
-    modal.classList.remove('hidden');
-    overlay.classList.remove('hidden');
-  }); */
-/*
-//const modal = document.querySelector('.modal');
-const overlay = document.querySelector('.overlay');
-const btnCLoseModal = document.querySelector('.close-modal');
-const btnShowModal = document.querySelectorAll('.show-modal');
+//starting conditions
+score0El.textContent = 0;
+score1El.textContent = 0;
+diceEl.classList.add('hidden');
 
-//to open modal
-const showModal = modalId => {
-  const modal = document.getElementById(modalId);
-  modal.classList.add('hidden');
-  overlay.classList.add('hidden');
+const scores = [0, 0];
+let currentScore = 0; //it`s need to be outside switchPlayer function
+let activePlayer = 0;
+let playing = true;
+
+const switchPlayer = function () {
+  document.getElementById(`current--${activePlayer}`).textContent =
+    currentScore;
+  currentScore = 0;
+  activePlayer = activePlayer === 0 ? 1 : 0;
+
+  //to change background with active player
+  player0El.classList.toggle('player-active');
+  player1El.classList.toggle('player-active');
 };
+//rolling dice functionality
+btnRoll.addEventListener('click', function () {
+  //generating a random dice roll
+  if (playing) {
+    const dice = Math.trunc(Math.random() * 6) + 1;
 
-//to close model
-const closeModal = modalId => {
-  const modal = document.getElementById(modalId);
-  modal.classList.remove('hidden');
-  overlay.classList.remove('hidden');
-};
+    //display dice
+    diceEl.classList.remove('hidden');
+    diceEl.src = `dice-${dice}.png`;
 
-//event listener to open button
-openButton.forEach(button => {
-  button.addEventListener('click', () => {
-    const target = button.getAttribute('data-target');
-    showModal(target);
-  });
+    //check for rolled 1: if true
+    if (dice !== 1) {
+      //add dice to current score
+      currentScore += dice; //currentScore= currentScore + dice
+      //  current0El.textContent = currentScore;//set the score not dynamicaly
+      document.getElementById(`current--${activePlayer}`).textContent =
+        currentScore; //select the score dynamicaly based on witch the active player right now
+    } else {
+      //switch to next player
+      switchPlayer();
+    }
+  }
+});
+//implement the hold button
+btnHold.addEventListener('click', function () {
+  if (playing) {
+    scores[activePlayer] += currentScore;
+    //scores[1] = scores[1] + currentScore
+
+    document.getElementById(`score--${activePlayer}`).textContent =
+      scores[activePlayer];
+
+    if (scores[activePlayer] >= 20) {
+      playing = false;
+
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.add('player--winner');
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.remove('player--active');
+    } else {
+      switchPlayer();
+    }
+  }
 });
 
-//event listener for close buttons
+//button new game logic
+btnNew.addEventListener('click', function () {
+  //get all elements to 0 point
+  scores[0] = 0;
+  scores[1] = 0;
+  currentScore = 0;
+  activePlayer = 0;
+  playing = true;
 
-closeButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    const target = button.getAttribute('data-target');
-    closeModal(target);
-  });
-});
+  //set all numbers to 0 point
+  score0El.textContent = 0;
+  score1El.textContent = 0;
+  current0El.textContent = 0;
+  current1El.textContent = 0;
 
-//close when click on overlay
+  //erase previous classes from players
+  player0El.classList.remove('player--winner', 'player--active');
+  player1El.classList.remove('player--winner', 'player--active');
 
-overlay.addEventListener('click', () => {
-  document.querySelectorAll('.modal').forEach(modal => {
-    modal.classList.add('hidden');
-  });
-  overlay.classList.add('hidden');
-});
-*/
-
-// Select elements
-const showButtons = document.querySelectorAll('.show-modal');
-const closeButtons = document.querySelectorAll('.close-modal');
-const overlay = document.querySelector('.overlay');
-
-// Function to open modal
-const showModal = modalId => {
-  const modal = document.getElementById(modalId);
-  modal.classList.remove('hidden');
-  overlay.classList.remove('hidden');
-};
-
-// Function to close modal
-const closeModal = modalId => {
-  const modal = document.getElementById(modalId);
-  modal.classList.add('hidden');
-  overlay.classList.add('hidden');
-};
-
-// Attach event listeners to showModalons
-showButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    const target = button.getAttribute('data-target');
-    showModal(target);
-  });
-});
-
-// Attach event listeners to close buttons
-closeButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    const target = button.getAttribute('data-target');
-    closeModal(target);
-  });
-});
-
-// Close modal when clicking on the overlay
-overlay.addEventListener('click', () => {
-  document.querySelectorAll('.modal').forEach(modal => {
-    modal.classList.add('hidden');
-  });
-  overlay.classList.add('hidden');
+  //to start with 0 player
+  player0El.classList.add('player--active');
 });
